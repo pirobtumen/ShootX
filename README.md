@@ -20,6 +20,6 @@ In Ubuntu install with:
 
 ## Run
 
-The executable file is inside ```build```. So you can call it: ./build/xshoot
+The executable file is inside ```build```. So you can call it with: ```./build/xshoot```
 
 The image is saved in PPM format in the current dirrectory ( ```pwd``` ).
