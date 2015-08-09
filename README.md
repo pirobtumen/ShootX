@@ -1,4 +1,4 @@
-# ShootX
+# XShoot
 
 Simple command line XServer screen capture tool.
 
@@ -8,18 +8,18 @@ Simple command line XServer screen capture tool.
 
 ## Dependencies
 
-```libx11-dev```
+ - libx11-dev
+
+In Ubuntu install with:
+
+```$ sudo apt-get install libx11-dev```
 
 ## Compile
 
-```make```
+```$ make```
 
 ## Run
 
-The app is built inside ```build``` folder.
+The executable file is inside ```build```. So you can call it: ./build/xshoot
 
-```./build/shoot-x```
-
-The capture is saved in the current directory (```pwd```).
-
-## GPL v3
+The image is saved in PPM format in the current dirrectory ( ```pwd``` ).
