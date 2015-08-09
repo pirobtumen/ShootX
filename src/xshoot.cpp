@@ -22,8 +22,6 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h> // XGetPixel
 
-#include "Vector/Vector.hpp"
-
 
 typedef unsigned long PIXEL_COLOR;
 
