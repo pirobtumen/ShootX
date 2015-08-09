@@ -22,4 +22,6 @@ In Ubuntu install with:
 
 The executable file is inside ```build```. So you can call it with: ```./build/xshoot```
 
-The image is saved in PPM format in the current dirrectory ( ```pwd``` ).
+## Ouput
+
+The image is saved as "**img_capture.ppm**" in the current dirrectory ( ```pwd``` ).
