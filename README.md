@@ -2,6 +2,8 @@
 
 Simple command line XServer screen capture tool.
 
+#### GPL v3 
+
 ### Supported formats
 
  - PPM
