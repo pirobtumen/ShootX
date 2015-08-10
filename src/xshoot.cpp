@@ -1,16 +1,40 @@
 /*
-	Screnshot
+	XShoot: Simple command line XServer screen capture tool. 
+	
+    Copyright (C) 2015  Alberto Sola Comino
 
-	Simple programa para capturar la pantalla.
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	- Guarda la imagen en formato ".ppm".
-	- Soporta múltiples monitores.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	Compilación:
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+	
+	Caracteristics:
+	=======================
+	
+		- Save image as PPM.
+		- Supports multi-monitor. ( Capture both screens )
 
-	Uso:
+	Dependencies:
+	=======================
+	
+		libx11-dev
 
-	Alberto Sola - 2015
+	Usage:
+	========================
+	
+		./xshoot
+		
+		Saves the image as img_capture.ppm where the app
+		is called.
 
 */
 
@@ -27,16 +51,16 @@ typedef unsigned long PIXEL_COLOR;
 
 ////////////////////////////
 //
-//		Programa Principal
+//		Main Program
 //
 ////////////////////////////
 
 int main(){
 
-	// Nos conectamos al 'display'.
+	// Open 'display'.
 	Display * display = XOpenDisplay(0);
 
-	// Comprobamos si se ha realizado con éxito.
+	// Check for errors
 	if( !display ){
 
 		std::cout << "No se pudo abrir 'display'." << std::endl;
@@ -44,19 +68,19 @@ int main(){
 
 	}
 
-	// Pantalla.
+	// Screen
 	const int screen = XDefaultScreen(display);
 
-	// Dimensiones.
+	// Size
 	const int width = DisplayWidth(display, screen);
-   const int height = DisplayHeight(display, screen);
+  	const int height = DisplayHeight(display, screen);
 
-   const Window window = RootWindow(display, screen);
+   	const Window window = RootWindow(display, screen);
 
-	// Atributos de la ventana.
+	// Window attributes
 	XWindowAttributes window_attr;
 
-	// Comprobamos quue se haya realizado con éxito.
+	//  Check for errors
 	if (!XGetWindowAttributes(display, window, &window_attr)) {
 		
 		std::cout << "No se pudieron obtener los atributos de la ventana." << std::endl;
@@ -65,7 +89,7 @@ int main(){
 		exit(1);
 	}
 
-   // Máscaras
+   // Colour mask
 	PIXEL_COLOR red_mask = window_attr.visual -> red_mask;
 	PIXEL_COLOR green_mask = window_attr.visual -> green_mask;
 	PIXEL_COLOR blue_mask = window_attr.visual -> blue_mask;
@@ -76,7 +100,7 @@ int main(){
 	screen_capture = XGetImage( display, window, 0, 0,
 						  				 width, height, AllPlanes, ZPixmap );
 	
-	// Comprobamos quue se haya realizado con éxito.
+	//  Check for errors
 	if( !screen_capture ){
 
 		std::cout << "No se pudo obtener la imagen." << std::endl;
@@ -85,7 +109,7 @@ int main(){
 		exit(1);
 	}
 
-	// Archivo de salida
+	// Output file
 	std::ofstream img_capture;
 	img_capture.open("img_capture.ppm");
 
@@ -99,6 +123,12 @@ int main(){
 		exit(1);
 	}
 
+	//////////////////
+	//
+	//		PPM
+	//
+	//////////////////
+
 	// HEADER
 	img_capture << "P6" << std::endl;
 	img_capture << width << " " << height << std::endl;
@@ -107,25 +137,24 @@ int main(){
 	// Pixel
 	PIXEL_COLOR pixel;
 
-	// Recorremos las filas
+	// rows
 	for( int y = 0; y < height; y++ ){
 		
-		// Recorremos cada columna
+		// columns
 		for( int x = 0; x < width; x++ ){
 
-			// Obtenemos cada píxel
+			// Get every pixel (x, y)
 			pixel = XGetPixel( screen_capture, x, y );
 			
-			/*
-				Conversión DEC -> RGB
+			/*			
+				Conversion: DEC -> RGB
 
-				Utilizamos las máscaras para quedarnos con el byte
-				que nos interesa.
+				Apply mask to every colour.
 
-				Filtramos con 'shift operator'.
+				Shift the bits.
 
-				Convertimos en un caracter para que al escribirlo
-				en el fichero aparezca como un caracter.
+				Convert every color to unsigned char and
+				write it to the file.
 			*/
 			img_capture << ( unsigned char ) ( (pixel & red_mask) >> 16 );
 			img_capture << ( unsigned char ) ( (pixel & green_mask) >> 8 );
@@ -135,10 +164,10 @@ int main(){
 
 	}
 
-	// Cerramos el fichero.
+	// Close file
 	img_capture.close();
 
-	// Liberamos la memoria.
+	// Free memory
 	XDestroyImage( screen_capture );
    XCloseDisplay( display );
 
